@@ -476,6 +476,17 @@ function inject (bot) {
       return
     }
 
+    moveToNextNode();
+
+    // check for futility
+    // If we are digging, we may take longer.
+    if (!digging && performance.now() - lastNodeTime > 3500) {
+      // should never take this long to go to the next node
+      resetpath('stuck')
+    }
+  }
+
+  function moveToNextNode () {
     let nextPoint = path[0]
     const p = bot.entity.position
 
@@ -626,12 +637,6 @@ function inject (bot) {
     } else {
       bot.setControlState('forward', false)
       bot.setControlState('sprint', false)
-    }
-
-    // check for futility
-    if (performance.now() - lastNodeTime > 3500) {
-      // should never take this long to go to the next node
-      resetPath('stuck')
     }
   }
 }
